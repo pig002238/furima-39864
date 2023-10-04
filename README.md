@@ -19,7 +19,7 @@
 ### Association
 
 - has_many :items
-- has_many :delivery_addresses
+- has_many :purchase_histories
 
 ## items テーブル
 
