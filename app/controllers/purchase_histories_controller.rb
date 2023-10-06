@@ -1,4 +1,6 @@
 class PurchaseHistoriesController < ApplicationController
+  before_action :authenticate_user!
+
   def index
     @purchase_form = PurchaseForm.new
     @item = Item.find(params[:item_id])
