@@ -8,5 +8,6 @@ FactoryBot.define do
   # 電話番号
     item_id  { Faker::Number.unique.number(digits: 5) }  # ユニークな商品ID
     user_id  { Faker::Number.unique.number(digits: 5) }  # ユニークなユーザーID
+    token {"tok_abcdefghijk00000000000000000"}
   end
 end
