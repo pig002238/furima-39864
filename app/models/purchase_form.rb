@@ -15,7 +15,7 @@ class PurchaseForm
   
 
   def save(params,user_id)
-    purchase_history = PurchaseHistory.create(item_id: params[:item_id].to_i, user_id: user_id)
+    purchase_history = PurchaseHistory.create(item_id: item_id, user_id: user_id)
     
     DeliveryAddress.create(
       postal_code: postal_code,

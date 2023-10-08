@@ -1,21 +1,16 @@
 class PurchaseHistoriesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, only: [:index]
   before_action :set_public_key, only: [:index, :create]
-  before_action :contributor_confirmation, only: [:index, :edit]
+  before_action :contributor_confirmation, only: [:edit, :update, :destroy]
+    before_action :non_purchased_item, only: [:index, :create]
 
   def index
     @purchase_form = PurchaseForm.new
-    @item = Item.find(params[:item_id])
-    if @item.purchase_history.present?
-
-      redirect_to root_path
-    end
   end
   
 
   def create
     @purchase_form = PurchaseForm.new(purchase_params)
-    @item = Item.find(params[:item_id])
     if @purchase_form.valid?
       pay_item
       @purchase_form.save(params,current_user.id)
@@ -26,14 +21,6 @@ class PurchaseHistoriesController < ApplicationController
     end
   end
 
-  def edit
-    @item = Item.find(params[:id])
-
-    unless user_signed_in? && @item.user == current_user && !@item.sold?
-      redirect_to root_path
-    end
-  end
-  
   private
 
     def purchase_params
@@ -61,8 +48,14 @@ class PurchaseHistoriesController < ApplicationController
       gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
     end
 
+    
     def contributor_confirmation
-      @item = Item.find(params[:item_id])
-      redirect_to root_path unless current_user == @item.user_id
+      redirect_to root_path unless current_user == @item.user
     end
+
+    def non_purchased_item
+      @item = Item.find(params[:item_id])
+      redirect_to root_path if current_user.id == @item.user_id || @item.purchase_history.present?
+    end
+  
 end
